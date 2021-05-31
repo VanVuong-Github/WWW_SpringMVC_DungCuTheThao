@@ -55,7 +55,7 @@ public class KhachHangServiceImpl implements KhachHangService {
 	@Transactional
 	public void update(KhachHang khachHang) {
 		Session session = SessionFactory.getCurrentSession();
-		session.update(khachHang);
+		session.saveOrUpdate(khachHang);
 	}
 
 }

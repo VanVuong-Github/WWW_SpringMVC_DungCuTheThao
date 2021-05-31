@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -14,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -89,6 +91,48 @@ public class AuthController {
 		taiKhoanService.save(taiKhoan);
 
 		return ResponseEntity.ok(new MessageResponse("Đăng ký thành công!"));
+	}
+	
+	/**
+	 * update role => ROLE_MODERATOR
+	 * @return
+	 */
+	@PreAuthorize("hasRole('ADMIN')")
+	@PutMapping("/up-role")
+	public ResponseEntity<?> upRole(String username) {
+		// tìm tài khoản cần tăng role => ROLE_MODERATOR
+		TaiKhoan taiKhoan = taiKhoanService.findByUsername(username);
+		if(taiKhoan == null) {
+			return ResponseEntity.badRequest().body(new MessageResponse("Tài khoản không tồn tại!"));
+		} else {
+			Set<Role> roles = new HashSet<>();
+			Role role = roleService.findByRole(RoleEnum.ROLE_MODERATOR);
+			roles.add(role);
+			taiKhoan.setRoles(roles);
+			taiKhoanService.save(taiKhoan);
+			return ResponseEntity.ok(new MessageResponse(username + " đã trở thành MODERATOR!"));
+		}
+	}
+	
+	/**
+	 * update role => ROLE_CUSTOMER
+	 * @return
+	 */
+	@PreAuthorize("hasRole('ADMIN')")
+	@PutMapping("/down-role")
+	public ResponseEntity<?> downRole(String username) {
+		// tìm tài khoản cần giảm role => ROLE_CUSTOMER
+		TaiKhoan taiKhoan = taiKhoanService.findByUsername(username);
+		if(taiKhoan == null) {
+			return ResponseEntity.badRequest().body(new MessageResponse("Tài khoản không tồn tại!"));
+		} else {
+			Set<Role> roles = new HashSet<>();
+			Role role = roleService.findByRole(RoleEnum.ROLE_CUSTOMER);
+			roles.add(role);
+			taiKhoan.setRoles(roles);
+			taiKhoanService.save(taiKhoan);
+			return ResponseEntity.ok(new MessageResponse(username + " đã trở thành CUSTOMER!"));
+		}
 	}
 
 }

@@ -10,6 +10,8 @@ public interface NhaCungCapService {
 	public NhaCungCap findById(Long id);
 
 	public void save(NhaCungCap nhaCungCap);
+	
+	public void update(NhaCungCap nhaCungCap);
 
 	public void deleteById(Long id);
 

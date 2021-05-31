@@ -31,7 +31,7 @@ public class TaiKhoanServiceImpl implements TaiKhoanService {
 	@Transactional
 	public void save(TaiKhoan taiKhoan) {
 		Session session = SessionFactory.getCurrentSession();
-		session.save(taiKhoan);
+		session.saveOrUpdate(taiKhoan);
 	}
 
 	@Override

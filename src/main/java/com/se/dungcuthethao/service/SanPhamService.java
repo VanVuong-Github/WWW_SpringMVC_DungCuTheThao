@@ -8,5 +8,6 @@ public interface SanPhamService {
 	public List<SanPham> findAdd();
 	public SanPham findById(Long id);
 	public void save(SanPham sanPham);
+	public void update(SanPham sanPham);
 	public void deleteById(Long id);
 }

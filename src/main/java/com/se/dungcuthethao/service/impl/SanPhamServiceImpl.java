@@ -1,6 +1,12 @@
 package com.se.dungcuthethao.service.impl;
 
 import java.util.List;
+
+import javax.transaction.Transactional;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.se.dungcuthethao.entity.SanPham;
@@ -8,29 +14,47 @@ import com.se.dungcuthethao.service.SanPhamService;
 
 @Repository
 public class SanPhamServiceImpl implements SanPhamService {
+	
+	@Autowired
+	private SessionFactory SessionFactory;
 
 	@Override
+	@Transactional
 	public List<SanPham> findAdd() {
-		// TODO Auto-generated method stub
-		return null;
+		Session session = SessionFactory.getCurrentSession();
+		List<SanPham> list = session.createQuery("from SanPham", SanPham.class).getResultList();
+		return list;
 	}
 
 	@Override
+	@Transactional
 	public SanPham findById(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		Session session = SessionFactory.getCurrentSession();
+		SanPham sanPham = session.find(SanPham.class, id);
+		return sanPham;
 	}
 
 	@Override
+	@Transactional
 	public void save(SanPham sanPham) {
-		// TODO Auto-generated method stub
-		
+		Session session = SessionFactory.getCurrentSession();
+		session.save(sanPham);
 	}
 
 	@Override
+	@Transactional
 	public void deleteById(Long id) {
-		// TODO Auto-generated method stub
-		
+		Session session = SessionFactory.getCurrentSession();
+		SanPham sanPham = session.find(SanPham.class, id);
+		if(sanPham != null) 
+			session.delete(sanPham);
+	}
+
+	@Override
+	@Transactional
+	public void update(SanPham sanPham) {
+		Session session = SessionFactory.getCurrentSession();
+		session.saveOrUpdate(sanPham);
 	}
 
 }

@@ -9,52 +9,52 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.se.dungcuthethao.entity.NhaCungCap;
-import com.se.dungcuthethao.service.NhaCungCapService;
+import com.se.dungcuthethao.entity.ChiTietHoaDon;
+import com.se.dungcuthethao.service.ChiTietHoaDonService;
 
 @Repository
-public class NhaCungCapServiceImpl implements NhaCungCapService {
+public class ChiTietHoaDonServiceImpl implements ChiTietHoaDonService{
 	
 	@Autowired
 	private SessionFactory SessionFactory;
 
 	@Override
 	@Transactional
-	public List<NhaCungCap> findAdd() {
+	public List<ChiTietHoaDon> findAdd() {
 		Session session = SessionFactory.getCurrentSession();
-		List<NhaCungCap> list = session.createQuery("from NhaCungCap", NhaCungCap.class).getResultList();
+		List<ChiTietHoaDon> list = session.createQuery("from ChiTietHoaDon", ChiTietHoaDon.class).getResultList();
 		return list;
 	}
 
 	@Override
 	@Transactional
-	public NhaCungCap findById(Long id) {
+	public ChiTietHoaDon findById(Long id) {
 		Session session = SessionFactory.getCurrentSession();
-		NhaCungCap nhaCungCap = session.find(NhaCungCap.class, id);
-		return nhaCungCap;
+		ChiTietHoaDon chiTietHoaDon = session.find(ChiTietHoaDon.class, id);
+		return chiTietHoaDon;
 	}
 
 	@Override
 	@Transactional
-	public void save(NhaCungCap nhaCungCap) {
+	public void save(ChiTietHoaDon chiTietHoaDon) {
 		Session session = SessionFactory.getCurrentSession();
-		session.save(nhaCungCap);
+		session.save(chiTietHoaDon);
+	}
+
+	@Override
+	@Transactional
+	public void update(ChiTietHoaDon chiTietHoaDon) {
+		Session session = SessionFactory.getCurrentSession();
+		session.saveOrUpdate(chiTietHoaDon);
 	}
 
 	@Override
 	@Transactional
 	public void deleteById(Long id) {
 		Session session = SessionFactory.getCurrentSession();
-		NhaCungCap nhaCungCap = session.find(NhaCungCap.class, id);
-		if(nhaCungCap != null) 
-			session.delete(nhaCungCap);
-	}
-
-	@Override
-	@Transactional
-	public void update(NhaCungCap nhaCungCap) {
-		Session session = SessionFactory.getCurrentSession();
-		session.saveOrUpdate(nhaCungCap);
+		ChiTietHoaDon chiTietHoaDon = session.find(ChiTietHoaDon.class, id);
+		if(chiTietHoaDon != null) 
+			session.delete(chiTietHoaDon);
 	}
 
 }

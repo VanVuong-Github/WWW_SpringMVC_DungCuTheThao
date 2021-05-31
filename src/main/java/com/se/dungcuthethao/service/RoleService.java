@@ -6,5 +6,7 @@ import com.se.dungcuthethao.entity.enumEntity.RoleEnum;
 public interface RoleService {
 
 	public Role findByRole(RoleEnum role);
+	
+	public void update(Role role);
 
 }

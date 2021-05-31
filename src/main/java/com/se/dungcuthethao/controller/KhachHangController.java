@@ -57,11 +57,7 @@ public class KhachHangController {
 	public ResponseEntity<?> updateKhachHang(@PathVariable("id") Long id, @RequestBody KhachHang khachHang) {
 		KhachHang rs = khachHangService.findById(id);
 		if (rs != null) {
-			rs.setEmail(khachHang.getEmail());
-			rs.setLoai(khachHang.getLoai());
-			rs.setSdt(khachHang.getSdt());
-			rs.setTen(khachHang.getTen());
-			khachHangService.update(rs);
+			khachHangService.update(khachHang);
 			return new ResponseEntity<KhachHang>(khachHang, HttpStatus.OK);
 		}
 		return ResponseEntity.badRequest().body(new MessageResponse("Cập nhật khách hàng không thành công"));
@@ -69,7 +65,7 @@ public class KhachHangController {
 
 	@PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
 	@DeleteMapping("/khachhangs/{id}")
-	public ResponseEntity<?> deleteCustomer(@PathVariable("id") Long id) {
+	public ResponseEntity<?> deleteKhachHang(@PathVariable("id") Long id) {
 		try {
 			khachHangService.deleteById(id);
 			return ResponseEntity.ok(new MessageResponse("Xóa thành công khách hàng"));

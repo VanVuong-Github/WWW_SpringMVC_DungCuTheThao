@@ -26,4 +26,11 @@ public class RoleServiceImpl implements RoleService {
 		return rs;
 	}
 
+	@Override
+	@Transactional
+	public void update(Role role) {
+		Session session = SessionFactory.getCurrentSession();
+		session.saveOrUpdate(role);
+	}
+
 }

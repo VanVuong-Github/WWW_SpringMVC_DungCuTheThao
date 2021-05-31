@@ -10,6 +10,8 @@ public interface HoaDonService {
 	public HoaDon findById(Long id);
 
 	public void save(HoaDon hoaDon);
+	
+	public void update(HoaDon hoaDon);
 
 	public void deleteById(Long id);
 
