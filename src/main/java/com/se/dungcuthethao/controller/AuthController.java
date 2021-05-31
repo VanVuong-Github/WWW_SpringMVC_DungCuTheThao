@@ -14,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,6 +27,7 @@ import com.se.dungcuthethao.entity.TaiKhoan;
 import com.se.dungcuthethao.entity.enumEntity.RoleEnum;
 import com.se.dungcuthethao.jwt.JwtUtils;
 import com.se.dungcuthethao.jwt.request.LoginRequest;
+import com.se.dungcuthethao.jwt.request.PasswordChangeRequest;
 import com.se.dungcuthethao.jwt.request.SignupRequest;
 import com.se.dungcuthethao.jwt.response.JwtResponse;
 import com.se.dungcuthethao.jwt.response.MessageResponse;
@@ -35,6 +37,7 @@ import com.se.dungcuthethao.service.impl.UserDetailsImpl;
 
 /**
  * Quản lý đăng ký và đăng nhập tài khoản người dùng
+ * 
  * @author Lại Văn Vượng
  *
  */
@@ -59,17 +62,21 @@ public class AuthController {
 
 	@PostMapping("/signin")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-		Authentication authentication = authenticationManager.authenticate(
-				new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+		try {
+			Authentication authentication = authenticationManager.authenticate(
+					new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
-		SecurityContextHolder.getContext().setAuthentication(authentication);
-		String jwt = jwtUtils.generateJwtToken(authentication);
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+			String jwt = jwtUtils.generateJwtToken(authentication);
 
-		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-		TaiKhoan taiKhoan = userDetails.getTaiKhoan();
-		KhachHang khachHang = userDetails.getTaiKhoan().getKhachHang();
-
-		return ResponseEntity.ok(new JwtResponse(jwt, khachHang, taiKhoan));
+			UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+			TaiKhoan taiKhoan = userDetails.getTaiKhoan();
+			KhachHang khachHang = userDetails.getTaiKhoan().getKhachHang();
+			
+			return ResponseEntity.ok(new JwtResponse(jwt, khachHang, taiKhoan));
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(new MessageResponse("Tài khoản hoặc mật khẩu không chính xác!"));
+		}
 	}
 
 	@PostMapping("/signup")
@@ -92,17 +99,31 @@ public class AuthController {
 
 		return ResponseEntity.ok(new MessageResponse("Đăng ký thành công!"));
 	}
-	
+
+	@PreAuthorize("hasRole('CUSTOMER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+	@PutMapping("/changePassword/{id}")
+	public ResponseEntity<?> changePassword(@PathVariable Long id, @RequestBody PasswordChangeRequest passwordChangeRequest) {
+		TaiKhoan taiKhoan = taiKhoanService.findById(id);
+		if (taiKhoan == null) {
+			return ResponseEntity.badRequest().body(new MessageResponse("Tài khoản không tồn tại!"));
+		} else {
+			taiKhoan.setPassword(passwordEncoder.encode(passwordChangeRequest.getNewPassword()));
+			taiKhoanService.save(taiKhoan);
+			return ResponseEntity.ok(new MessageResponse("Đổi mật khẩu thành công!"));
+		}
+	}
+
 	/**
 	 * update role => ROLE_MODERATOR
+	 * 
 	 * @return
 	 */
 	@PreAuthorize("hasRole('ADMIN')")
-	@PutMapping("/up-role")
-	public ResponseEntity<?> upRole(String username) {
+	@PutMapping("/up-role/{id}")
+	public ResponseEntity<?> upRole(@PathVariable Long id) {
 		// tìm tài khoản cần tăng role => ROLE_MODERATOR
-		TaiKhoan taiKhoan = taiKhoanService.findByUsername(username);
-		if(taiKhoan == null) {
+		TaiKhoan taiKhoan = taiKhoanService.findById(id);
+		if (taiKhoan == null) {
 			return ResponseEntity.badRequest().body(new MessageResponse("Tài khoản không tồn tại!"));
 		} else {
 			Set<Role> roles = new HashSet<>();
@@ -110,20 +131,21 @@ public class AuthController {
 			roles.add(role);
 			taiKhoan.setRoles(roles);
 			taiKhoanService.save(taiKhoan);
-			return ResponseEntity.ok(new MessageResponse(username + " đã trở thành MODERATOR!"));
+			return ResponseEntity.ok(new MessageResponse(taiKhoan.getUsername() + " đã trở thành MODERATOR!"));
 		}
 	}
-	
+
 	/**
 	 * update role => ROLE_CUSTOMER
+	 * 
 	 * @return
 	 */
 	@PreAuthorize("hasRole('ADMIN')")
-	@PutMapping("/down-role")
-	public ResponseEntity<?> downRole(String username) {
+	@PutMapping("/down-role/{id}")
+	public ResponseEntity<?> downRole(@PathVariable Long id) {
 		// tìm tài khoản cần giảm role => ROLE_CUSTOMER
-		TaiKhoan taiKhoan = taiKhoanService.findByUsername(username);
-		if(taiKhoan == null) {
+		TaiKhoan taiKhoan = taiKhoanService.findById(id);
+		if (taiKhoan == null) {
 			return ResponseEntity.badRequest().body(new MessageResponse("Tài khoản không tồn tại!"));
 		} else {
 			Set<Role> roles = new HashSet<>();
@@ -131,7 +153,7 @@ public class AuthController {
 			roles.add(role);
 			taiKhoan.setRoles(roles);
 			taiKhoanService.save(taiKhoan);
-			return ResponseEntity.ok(new MessageResponse(username + " đã trở thành CUSTOMER!"));
+			return ResponseEntity.ok(new MessageResponse(taiKhoan.getUsername() + " đã trở thành CUSTOMER!"));
 		}
 	}
 

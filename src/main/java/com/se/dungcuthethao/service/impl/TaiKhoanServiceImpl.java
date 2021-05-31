@@ -20,10 +20,8 @@ public class TaiKhoanServiceImpl implements TaiKhoanService {
 	@Transactional
 	public TaiKhoan findByUsername(String username) {
 		Session session = SessionFactory.getCurrentSession();
-		TaiKhoan taiKhoan = session
-				.createQuery("from TaiKhoan where username = :username", TaiKhoan.class)
-				.setParameter("username", username)
-				.getSingleResult();
+		TaiKhoan taiKhoan = session.createQuery("from TaiKhoan where userName = :username", TaiKhoan.class)
+				.setParameter("username", username).uniqueResult();
 		return taiKhoan;
 	}
 
@@ -38,17 +36,19 @@ public class TaiKhoanServiceImpl implements TaiKhoanService {
 	@Transactional
 	public boolean existsByUsername(String username) {
 		Session session = SessionFactory.getCurrentSession();
-		try {
-			TaiKhoan taiKhoan = session
-					.createQuery("from TaiKhoan where username = :username", TaiKhoan.class)
-					.setParameter("username", username)
-					.getSingleResult();
-			if(taiKhoan != null)
-				return true;
-		} catch (Exception e) {
-			return false;
-		}
+		TaiKhoan taiKhoan = session.createQuery("from TaiKhoan where userName = :username", TaiKhoan.class)
+				.setParameter("username", username).uniqueResult();
+		if (taiKhoan != null)
+			return true;
 		return false;
+	}
+
+	@Override
+	@Transactional
+	public TaiKhoan findById(Long id) {
+		Session session = SessionFactory.getCurrentSession();
+		TaiKhoan taiKhoan = session.find(TaiKhoan.class, id);
+		return taiKhoan;
 	}
 
 }
