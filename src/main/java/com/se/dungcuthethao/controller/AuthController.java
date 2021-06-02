@@ -59,7 +59,13 @@ public class AuthController {
 
 	@Autowired
 	private JwtUtils jwtUtils;
-
+	
+	/**
+	 * Đăng nhập (jwt authen)
+	 * nếu thành công thì tạo phiên đăng nhập bằng chuỗi token
+	 * @param loginRequest
+	 * @return
+	 */
 	@PostMapping("/signin")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 		try {
@@ -72,13 +78,18 @@ public class AuthController {
 			UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 			TaiKhoan taiKhoan = userDetails.getTaiKhoan();
 			KhachHang khachHang = userDetails.getTaiKhoan().getKhachHang();
-			
+
 			return ResponseEntity.ok(new JwtResponse(jwt, khachHang, taiKhoan));
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().body(new MessageResponse("Tài khoản hoặc mật khẩu không chính xác!"));
 		}
 	}
-
+	
+	/**
+	 * Đăng ký tài khoản người dùng => tự động tạo khách hàng mặc định với role CUSTOMER
+	 * @param signUpRequest
+	 * @return
+	 */
 	@PostMapping("/signup")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
 		// nếu tài khoản tồn tại
@@ -99,17 +110,26 @@ public class AuthController {
 
 		return ResponseEntity.ok(new MessageResponse("Đăng ký thành công!"));
 	}
-
+	
+	/**
+	 * đổi mật khẩu của tài khoản thành mật khẩu mới nếu tài khoản tồn tại và mật khẩu cũ chính xác
+	 * @param passwordChangeRequest
+	 * @return
+	 */
 	@PreAuthorize("hasRole('CUSTOMER') or hasRole('MODERATOR') or hasRole('ADMIN')")
-	@PutMapping("/changePassword/{id}")
-	public ResponseEntity<?> changePassword(@PathVariable Long id, @RequestBody PasswordChangeRequest passwordChangeRequest) {
-		TaiKhoan taiKhoan = taiKhoanService.findById(id);
+	@PutMapping("/changePassword")
+	public ResponseEntity<?> changePassword(@RequestBody PasswordChangeRequest passwordChangeRequest) {
+		TaiKhoan taiKhoan = taiKhoanService.findByUsername(passwordChangeRequest.getUsername());
 		if (taiKhoan == null) {
 			return ResponseEntity.badRequest().body(new MessageResponse("Tài khoản không tồn tại!"));
 		} else {
-			taiKhoan.setPassword(passwordEncoder.encode(passwordChangeRequest.getNewPassword()));
-			taiKhoanService.save(taiKhoan);
-			return ResponseEntity.ok(new MessageResponse("Đổi mật khẩu thành công!"));
+			if (passwordEncoder.matches(passwordChangeRequest.getOldPassword(), taiKhoan.getPassword())) {
+				taiKhoan.setPassword(passwordEncoder.encode(passwordChangeRequest.getNewPassword()));
+				taiKhoanService.save(taiKhoan);
+				return ResponseEntity.ok(new MessageResponse("Đổi mật khẩu thành công!"));
+			} else {
+				return ResponseEntity.badRequest().body(new MessageResponse("Tài khoản hoặc mật khẩu không chính xác!"));
+			}
 		}
 	}
 

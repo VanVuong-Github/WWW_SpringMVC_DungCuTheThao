@@ -10,4 +10,5 @@ public interface SanPhamService {
 	public void save(SanPham sanPham);
 	public void update(SanPham sanPham);
 	public void deleteById(Long id);
+	public List<SanPham> getSanPhamsByName(String name);
 }

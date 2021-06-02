@@ -2,6 +2,7 @@ package com.se.dungcuthethao.entity;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -60,17 +61,6 @@ public class HoaDon implements Serializable {
 	private KhachHang khachHang;
 
 	public HoaDon(Long id, LocalDate ngayDatHang, ThanhToanEnum thanhToanEnum, String diaChiGiaoHang, TrangThaiEnum trangThaiEnum,
-			float tong) {
-		super();
-		this.id = id;
-		this.ngayDatHang = ngayDatHang;
-		this.thanhToanEnum = thanhToanEnum;
-		this.diaChiGiaoHang = diaChiGiaoHang;
-		this.trangThaiEnum = trangThaiEnum;
-		this.tong = tong;
-	}
-
-	public HoaDon(Long id, LocalDate ngayDatHang, ThanhToanEnum thanhToanEnum, String diaChiGiaoHang, TrangThaiEnum trangThaiEnum,
 			float tong, List<ChiTietHoaDon> chiTietHoaDons, KhachHang khachHang) {
 		super();
 		this.id = id;
@@ -82,9 +72,20 @@ public class HoaDon implements Serializable {
 		this.chiTietHoaDons = chiTietHoaDons;
 		this.khachHang = khachHang;
 	}
-
+	
 	public HoaDon() {
 		super();
+	}
+
+	public HoaDon(KhachHang khachHang) {
+		super();
+		this.ngayDatHang = LocalDate.now();
+		this.thanhToanEnum = ThanhToanEnum.STORE;
+		this.diaChiGiaoHang = "Chưa có địa chỉ";
+		this.trangThaiEnum = TrangThaiEnum.PENDING;
+		this.tong = 0;
+		this.chiTietHoaDons = new ArrayList<ChiTietHoaDon>();
+		this.khachHang = khachHang;
 	}
 
 	public Long getId() {
@@ -164,11 +165,11 @@ public class HoaDon implements Serializable {
 		sumTotal();
 	}
 
-	public Double sumTotal() {
+	public float sumTotal() {
 		tong = 0;
 		if (!chiTietHoaDons.isEmpty()) {
 			chiTietHoaDons.forEach(detail -> tong += detail.tongHoaDon());
 		}
-		return (double) tong;
+		return tong;
 	}
 }

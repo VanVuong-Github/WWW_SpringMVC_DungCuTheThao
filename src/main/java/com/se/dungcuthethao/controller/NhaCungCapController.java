@@ -86,4 +86,9 @@ public class NhaCungCapController {
 			return ResponseEntity.badRequest().body(new MessageResponse("Xóa nhà cung cấp không thành công!!"));
 		}
 	}
+	
+	@GetMapping(value = "/nhacungcaps/search/{ten}")
+	public ResponseEntity<?> getNhaCungCapsByName(@PathVariable("ten") String name) {
+		return new ResponseEntity<List<NhaCungCap>>(nhaCungCapService.getNhaCungCapsByName(name), HttpStatus.OK);
+	}
 }

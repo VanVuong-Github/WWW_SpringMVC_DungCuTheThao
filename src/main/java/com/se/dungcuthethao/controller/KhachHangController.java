@@ -74,4 +74,9 @@ public class KhachHangController {
 					"Xóa khách hàng không thành công. Chỉ xóa được khi khách hàng này chưa lập hóa đơn nào"));
 		}
 	}
+	
+	@GetMapping(value = "/khachhangs/search/{ten}")
+	public ResponseEntity<?> getKhachHangsByName(@PathVariable("ten") String name) {
+		return new ResponseEntity<List<KhachHang>>(khachHangService.getKhachHangsByName(name), HttpStatus.OK);
+	}
 }

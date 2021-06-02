@@ -1,5 +1,6 @@
 package com.se.dungcuthethao.service.impl;
 
+import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 
 import org.hibernate.Session;
@@ -20,8 +21,9 @@ public class TaiKhoanServiceImpl implements TaiKhoanService {
 	@Transactional
 	public TaiKhoan findByUsername(String username) {
 		Session session = SessionFactory.getCurrentSession();
-		TaiKhoan taiKhoan = session.createQuery("from TaiKhoan where userName = :username", TaiKhoan.class)
-				.setParameter("username", username).uniqueResult();
+		TypedQuery<TaiKhoan> query = session.createQuery("from TaiKhoan where userName = :username", TaiKhoan.class)
+				.setParameter("username", username);
+		TaiKhoan taiKhoan = query.getSingleResult();
 		return taiKhoan;
 	}
 

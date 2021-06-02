@@ -2,6 +2,7 @@ package com.se.dungcuthethao.service.impl;
 
 import java.util.List;
 
+import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 
 import org.hibernate.Session;
@@ -55,6 +56,28 @@ public class HoaDonServiceImpl implements HoaDonService {
 	public void update(HoaDon hoaDon) {
 		Session session = SessionFactory.getCurrentSession();
 		session.saveOrUpdate(hoaDon);
+	}
+
+	@Override
+	@Transactional
+	public List<HoaDon> getHoaDonsByThanhToan(String thanhToan) {
+		Session session = SessionFactory.getCurrentSession();
+		TypedQuery<HoaDon> query = session
+				.createQuery("from HoaDon where thanhToan = :thanhToan ", HoaDon.class)
+				.setParameter("thanhToan", thanhToan);
+		List<HoaDon> list = query.getResultList();
+		return list;
+	}
+
+	@Override
+	@Transactional
+	public List<HoaDon> getHoaDonsByTrangThai(String trangThai) {
+		Session session = SessionFactory.getCurrentSession();
+		TypedQuery<HoaDon> query = session
+				.createQuery("from HoaDon where trangThai = :trangThai ", HoaDon.class)
+				.setParameter("trangThai", trangThai);
+		List<HoaDon> list = query.getResultList();
+		return list;
 	}
 
 }

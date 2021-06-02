@@ -14,5 +14,9 @@ public interface HoaDonService {
 	public void update(HoaDon hoaDon);
 
 	public void deleteById(Long id);
+	
+	public List<HoaDon> getHoaDonsByThanhToan(String thanhToan);
+	
+	public List<HoaDon> getHoaDonsByTrangThai(String trangThai);
 
 }

@@ -2,6 +2,7 @@ package com.se.dungcuthethao.service.impl;
 
 import java.util.List;
 
+import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 
 import org.hibernate.Session;
@@ -14,7 +15,7 @@ import com.se.dungcuthethao.service.NhaCungCapService;
 
 @Repository
 public class NhaCungCapServiceImpl implements NhaCungCapService {
-	
+
 	@Autowired
 	private SessionFactory SessionFactory;
 
@@ -46,7 +47,7 @@ public class NhaCungCapServiceImpl implements NhaCungCapService {
 	public void deleteById(Long id) {
 		Session session = SessionFactory.getCurrentSession();
 		NhaCungCap nhaCungCap = session.find(NhaCungCap.class, id);
-		if(nhaCungCap != null) 
+		if (nhaCungCap != null)
 			session.delete(nhaCungCap);
 	}
 
@@ -55,6 +56,17 @@ public class NhaCungCapServiceImpl implements NhaCungCapService {
 	public void update(NhaCungCap nhaCungCap) {
 		Session session = SessionFactory.getCurrentSession();
 		session.saveOrUpdate(nhaCungCap);
+	}
+
+	@Override
+	@Transactional
+	public List<NhaCungCap> getNhaCungCapsByName(String name) {
+		Session session = SessionFactory.getCurrentSession();
+		TypedQuery<NhaCungCap> query = session
+				.createQuery("from NhaCungCap where ten LIKE CONCAT('%', :name, '%')", NhaCungCap.class)
+				.setParameter("name", name);
+		List<NhaCungCap> list = query.getResultList();
+		return list;
 	}
 
 }

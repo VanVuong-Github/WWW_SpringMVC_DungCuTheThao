@@ -14,5 +14,7 @@ public interface NhaCungCapService {
 	public void update(NhaCungCap nhaCungCap);
 
 	public void deleteById(Long id);
+	
+	public List<NhaCungCap> getNhaCungCapsByName(String name);
 
 }

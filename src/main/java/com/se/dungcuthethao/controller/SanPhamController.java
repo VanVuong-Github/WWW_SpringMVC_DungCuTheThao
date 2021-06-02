@@ -64,7 +64,8 @@ public class SanPhamController {
 			return new ResponseEntity<SanPham>(sanPham, HttpStatus.OK);
 		}
 	}
-
+	
+	@PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
 	@PutMapping(value = "/sanphams/{id}", produces = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_XML_VALUE })
 	public ResponseEntity<?> updateSanPham(@PathVariable("id") Long id, @RequestBody SanPham sanPham) {
@@ -85,5 +86,10 @@ public class SanPhamController {
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().body(new MessageResponse("Xóa sản phẩm không thành công!!"));
 		}
+	}
+	
+	@GetMapping(value = "/sanphams/search/{ten}")
+	public ResponseEntity<?> getSanPhamsByName(@PathVariable("ten") String name) {
+		return new ResponseEntity<List<SanPham>>(sanPhamService.getSanPhamsByName(name), HttpStatus.OK);
 	}
 }

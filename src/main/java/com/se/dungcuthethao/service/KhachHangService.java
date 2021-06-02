@@ -16,4 +16,8 @@ public interface KhachHangService {
 
 	public void deleteById(Long id);
 	
+	public List<KhachHang> getKhachHangsByName(String name);
+	
+	public KhachHang findByTaiKhoanId(Long id);
+	
 }

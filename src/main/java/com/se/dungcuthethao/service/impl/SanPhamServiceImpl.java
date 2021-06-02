@@ -2,6 +2,7 @@ package com.se.dungcuthethao.service.impl;
 
 import java.util.List;
 
+import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 
 import org.hibernate.Session;
@@ -55,6 +56,15 @@ public class SanPhamServiceImpl implements SanPhamService {
 	public void update(SanPham sanPham) {
 		Session session = SessionFactory.getCurrentSession();
 		session.saveOrUpdate(sanPham);
+	}
+
+	@Override
+	@Transactional
+	public List<SanPham> getSanPhamsByName(String name) {
+		Session session = SessionFactory.getCurrentSession();
+		TypedQuery<SanPham> query = session.createQuery("from SanPham where ten LIKE CONCAT('%', :name, '%')", SanPham.class).setParameter("name", name);
+		List<SanPham> list = query.getResultList();
+		return list;
 	}
 
 }

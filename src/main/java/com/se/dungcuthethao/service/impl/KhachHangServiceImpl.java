@@ -2,6 +2,7 @@ package com.se.dungcuthethao.service.impl;
 
 import java.util.List;
 
+import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 
 import org.hibernate.Session;
@@ -14,7 +15,7 @@ import com.se.dungcuthethao.service.KhachHangService;
 
 @Repository
 public class KhachHangServiceImpl implements KhachHangService {
-	
+
 	@Autowired
 	private SessionFactory SessionFactory;
 
@@ -46,9 +47,9 @@ public class KhachHangServiceImpl implements KhachHangService {
 	public void deleteById(Long id) {
 		Session session = SessionFactory.getCurrentSession();
 		KhachHang khachHang = session.find(KhachHang.class, id);
-		if(khachHang != null) 
+		if (khachHang != null)
 			session.delete(khachHang);
-		
+
 	}
 
 	@Override
@@ -56,6 +57,31 @@ public class KhachHangServiceImpl implements KhachHangService {
 	public void update(KhachHang khachHang) {
 		Session session = SessionFactory.getCurrentSession();
 		session.saveOrUpdate(khachHang);
+	}
+
+	/**
+	 * xuất danh sách khách hàng có tên hoặc số điện thoại được tìm
+	 */
+	@Override
+	@Transactional
+	public List<KhachHang> getKhachHangsByName(String name) {
+		Session session = SessionFactory.getCurrentSession();
+		TypedQuery<KhachHang> query = session.createQuery(
+				"from KhachHang where ten LIKE CONCAT('%', :name, '%') or sdt LIKE CONCAT('%', :name, '%')",
+				KhachHang.class).setParameter("name", name);
+		List<KhachHang> list = query.getResultList();
+		return list;
+	}
+
+	@Override
+	@Transactional
+	public KhachHang findByTaiKhoanId(Long id) {
+		Session session = SessionFactory.getCurrentSession();
+		TypedQuery<KhachHang> query = session
+				.createQuery("from KhachHang where taiKhoanID = :id", KhachHang.class)
+				.setParameter("id", id+"");
+		KhachHang khachHang = query.getSingleResult();
+		return khachHang;
 	}
 
 }
