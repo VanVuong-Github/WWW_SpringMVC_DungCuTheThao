@@ -18,8 +18,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.se.dungcuthethao.entity.ChiTietHoaDon;
+import com.se.dungcuthethao.entity.HoaDon;
 import com.se.dungcuthethao.jwt.response.MessageResponse;
 import com.se.dungcuthethao.service.ChiTietHoaDonService;
+import com.se.dungcuthethao.service.HoaDonService;
 
 /**
  * Controller cho các request liên quan đến chi tiết hóa đơn
@@ -31,6 +33,9 @@ import com.se.dungcuthethao.service.ChiTietHoaDonService;
 @RestController
 @RequestMapping("/api")
 public class ChiTietHoaDonController {
+	
+	@Autowired
+	private HoaDonService hoaDonService;
 	
 	@Autowired
 	private ChiTietHoaDonService chiTietHoaDonService;
@@ -56,11 +61,17 @@ public class ChiTietHoaDonController {
 	
 	@PostMapping(value = "/chitiethoadons", produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
 	public ResponseEntity<?> add(@RequestBody ChiTietHoaDon chiTietHoaDon) {
+		HoaDon hoaDon = hoaDonService.findById(chiTietHoaDon.getHoaDon().getId());
 		ChiTietHoaDon rs = chiTietHoaDonService.findById(chiTietHoaDon.getId());
 		if (rs != null) {
 			return ResponseEntity.badRequest().body(new MessageResponse("Đã tồn tại chi tiết hóa đơn này !!"));
 		} else {
-			chiTietHoaDonService.save(chiTietHoaDon);
+			ChiTietHoaDon cthd = new ChiTietHoaDon();
+			cthd.setDonGia(chiTietHoaDon.getDonGia());
+			cthd.setHoaDon(hoaDon);
+			cthd.setSanPham(chiTietHoaDon.getSanPham());
+			cthd.setSoLuong(chiTietHoaDon.getSoLuong());
+			chiTietHoaDonService.save(cthd);
 			return new ResponseEntity<ChiTietHoaDon>(chiTietHoaDon, HttpStatus.OK);
 		}
 	}
@@ -70,6 +81,7 @@ public class ChiTietHoaDonController {
 	public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestBody ChiTietHoaDon chiTietHoaDon) {
 		ChiTietHoaDon rs = chiTietHoaDonService.findById(id);
 		if (rs != null) {
+			chiTietHoaDon.setId(id);
 			chiTietHoaDonService.update(chiTietHoaDon);
 			return new ResponseEntity<ChiTietHoaDon>(chiTietHoaDon, HttpStatus.OK);
 		}

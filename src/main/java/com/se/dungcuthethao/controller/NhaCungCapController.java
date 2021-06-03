@@ -70,6 +70,7 @@ public class NhaCungCapController {
 	public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestBody NhaCungCap nhaCungCap) {
 		NhaCungCap rs = nhaCungCapService.findById(id);
 		if (rs != null) {
+			nhaCungCap.setId(id);
 			nhaCungCapService.update(nhaCungCap);
 			return new ResponseEntity<NhaCungCap>(nhaCungCap, HttpStatus.OK);
 		}

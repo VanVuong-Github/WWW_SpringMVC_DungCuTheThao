@@ -2,86 +2,89 @@
 <html>
 
 <body>
-    <div
-        style="margin:0px;padding:0px;color:rgb(32,32,32);font-size:16px;font-weight:normal;font-family:Helvetica,Arial,sans-serif!important;line-height:150%!important">
-        <div class="mail_header" style="min-width:360px">
-            <div>
-                <h2>Lai Van Vuong thân mến,</h2>
-            </div>
-            <div>
-                <p>Đơn hàng <b>HoaDonID</b> của anh/chị đã được thành công vào <b>OrderDate</b></p>
+    <div class="header" style="height: 20px;"></div>
+    <div class="mail_header" style="min-width:360px">
+        <div>
+            <h2>Lai Van Vuong thân mến,</h2>
+        </div>
+        <div>
+            <p>Đơn hàng <b>HoaDonID</b> của anh/chị đã được thành công vào <b>OrderDate</b></p>
+        </div>
+    </div>
+    <div class="mail_body">
+        <div>
+            <p><b>Thông tin khách hàng</b></p>
+        </div>
+        <div class="customer_info">
+            <div><span>Tên Khách Hàng</span><br>
+                Địa chỉ khách hàng<br>
+                Điện thoại: sdt<br>
+                Email: <a href="" target="_blank">email khách hàng</a>
             </div>
         </div>
-        <div class="mail_body">
-            <div>Đơn hàng được giao đến (TrangThaiHoaDon)</div>
-            <div>
-                <p><b>Thông tin khách hàng</b></p>
-            </div>
-            <div class="customer_info">
-                <div><span>Tên Khách Hàng</span><br>
-                    Địa chỉ khách hàng<br>
-                    Điện thoại: sdt<br>
-                    Email: <a href="" target="_blank">email khách hàng</a>
-                </div>
-            </div>
-            <!-- form san pham -->
-            <div class="m_726544552752580217shipmentIndex">
-                <p><b>KIỆN HÀNG #1</b></p>
-            </div>
-
-            <div class="orderdetails_info">
-                <div class="m_726544552752580217product-productImage">
-                    <a href="https://www.lazada.vn/-i101412489-s101655540.html?urlFlag=true&amp;mp=1?" target="_blank"
-                        data-saferedirecturl="https://www.google.com/url?q=https://www.lazada.vn/-i101412489-s101655540.html?urlFlag%3Dtrue%26mp%3D1?&amp;source=gmail&amp;ust=1622743015947000&amp;usg=AFQjCNED_spfJi2hjprXEWmUzlr9CN9WBg"><img
-                            src="https://ci3.googleusercontent.com/proxy/ar6J-4uUgbJATxvNQi2e1iUMK9vXIs0nJ4WnFCoc04bH4koXplIX3lXbR6aqLtBqP5_GhgAW2hhDt2liRjy7s9Swd1hLacHpKG7VpJaS1yDle7JHVCFZrdLuy-FiNA=s0-d-e1-ft#https://vn-live-02.slatic.net/original/68fda16bed424fb46a9b710738d8f30c.jpg"
-                            width="160px" class="CToWUd"></a>
-                </div>
-                <div class="orderdetails_name">
-                    Sneaker Thời Trang Nam Zapas - GS068 (Đen)
-                </div>
-                <div class="orderdetails_price">
-                    VND 89.000
-                </div>
-                <div class="orderdetails_quantity">
-                    Số lượng: 1
-                </div>
-            </div>
-
-
+        <!-- form san pham -->
+        <div class="shipmentIndex">
+            <p><b>KIỆN HÀNG #1</b></p>
         </div>
-        <div class="mail_footer">
-            <div>
-                <div><p>Giao hàng Tiêu chuẩn</p></div>
-                <div class="order_paymentMethod"><p>Thanh toán khi nhận hàng</p></div>
+
+        <div class="orderdetails_info">
+            <div class="orderdetails_image">
+                <img src="data:image/jpg;base64,${requestScope.photo}" width="240" height="300" />
             </div>
-            <div class="price_info">
-                <table class="checkout_amount" cellpadding="0" cellspacing="0">
-                    <tbody>
-                        <tr>
-                            <td valign="top">Thành tiền: </td>
-                            <td valign="top" align="right">VND</td>
-                            <td valign="top" align="right">188.000</td>
-                        </tr>
-                        <tr>
-                            <td valign="top">Giảm giá: </td>
-                            <td valign="top" align="right">VND</td>
-                            <td valign="top" align="right">0</td>
-                        </tr>
-                        <tr>
-                            <td valign="top">Phí vận chuyển: </td>
-                            <td valign="top" align="right">VND</td>
-                            <td valign="top" align="right">22.000</td>
-                        </tr>
-                        <tr class="total">
-                            <td valign="top">Tổng cộng: </td>
-                            <td valign="top" align="right">VND</td>
-                            <td valign="top" align="right">210.000</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="orderdetails_name">
+                Sneaker Thời Trang Nam Zapas - GS068 (Đen)
+            </div>
+            <div class="orderdetails_price">
+                VND 89.000
+            </div>
+            <div class="orderdetails_quantity">
+                Số lượng: 1
             </div>
         </div>
     </div>
+    <div class="mail_footer">
+        <div>
+            <div>
+                <p>Giao hàng Tiêu chuẩn</p>
+            </div>
+            <div class="order_paymentMethod">
+                <p>Thanh toán khi nhận hàng</p>
+            </div>
+        </div>
+        <div class="price_info">
+            <table class="checkout_amount" cellpadding="0" cellspacing="0">
+                <tbody>
+                    <tr>
+                        <td valign="top">Thành tiền: </td>
+                        <td valign="top" align="right">VND</td>
+                        <td valign="top" align="right">188.000</td>
+                    </tr>
+                    <tr>
+                        <td valign="top">Giảm giá: </td>
+                        <td valign="top" align="right">VND</td>
+                        <td valign="top" align="right">0</td>
+                    </tr>
+                    <tr>
+                        <td valign="top">Phí vận chuyển: </td>
+                        <td valign="top" align="right">VND</td>
+                        <td valign="top" align="right">22.000</td>
+                    </tr>
+                    <tr class="total">
+                        <td valign="top">Tổng cộng: </td>
+                        <td valign="top" align="right">VND</td>
+                        <td valign="top" align="right">210.000</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <p>Nếu Anh/chị có bất kỳ câu hỏi nào, xin liên hệ với chúng tôi tại: <a href="mailto:" ></a></p>
+            <p>Xin chân thành cảm ơn anh/chị đã đặt hàng tại V-A-L shop</p>
+            <p>Trân trọng,</p>
+            <p><strong>Quản lý cửa hàng Dụng cụ thể thao V-A-L</strong></p>
+        </div>
+    </div>
+    <div class="footer" style="height: 30px;"></div>
 </body>
 
 </html>

@@ -55,7 +55,7 @@ public class SanPhamServiceImpl implements SanPhamService {
 	@Transactional
 	public void update(SanPham sanPham) {
 		Session session = SessionFactory.getCurrentSession();
-		session.saveOrUpdate(sanPham);
+		session.update(sanPham);
 	}
 
 	@Override

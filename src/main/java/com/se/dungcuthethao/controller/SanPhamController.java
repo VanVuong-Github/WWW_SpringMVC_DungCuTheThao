@@ -71,6 +71,7 @@ public class SanPhamController {
 	public ResponseEntity<?> updateSanPham(@PathVariable("id") Long id, @RequestBody SanPham sanPham) {
 		SanPham rs = sanPhamService.findById(id);
 		if (rs != null) {
+			sanPham.setId(id);
 			sanPhamService.update(sanPham);
 			return new ResponseEntity<SanPham>(sanPham, HttpStatus.OK);
 		}

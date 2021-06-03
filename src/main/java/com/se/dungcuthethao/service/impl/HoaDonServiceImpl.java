@@ -55,7 +55,7 @@ public class HoaDonServiceImpl implements HoaDonService {
 	@Transactional
 	public void update(HoaDon hoaDon) {
 		Session session = SessionFactory.getCurrentSession();
-		session.saveOrUpdate(hoaDon);
+		session.update(hoaDon);
 	}
 
 	@Override

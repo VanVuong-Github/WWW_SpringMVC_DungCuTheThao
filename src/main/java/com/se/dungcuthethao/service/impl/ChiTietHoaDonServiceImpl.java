@@ -45,7 +45,7 @@ public class ChiTietHoaDonServiceImpl implements ChiTietHoaDonService{
 	@Transactional
 	public void update(ChiTietHoaDon chiTietHoaDon) {
 		Session session = SessionFactory.getCurrentSession();
-		session.saveOrUpdate(chiTietHoaDon);
+		session.update(chiTietHoaDon);
 	}
 
 	@Override

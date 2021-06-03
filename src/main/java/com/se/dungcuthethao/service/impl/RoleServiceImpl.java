@@ -30,7 +30,7 @@ public class RoleServiceImpl implements RoleService {
 	@Transactional
 	public void update(Role role) {
 		Session session = SessionFactory.getCurrentSession();
-		session.saveOrUpdate(role);
+		session.update(role);
 	}
 
 }

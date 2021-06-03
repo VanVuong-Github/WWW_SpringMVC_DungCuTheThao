@@ -57,8 +57,12 @@ public class KhachHangController {
 	public ResponseEntity<?> updateKhachHang(@PathVariable("id") Long id, @RequestBody KhachHang khachHang) {
 		KhachHang rs = khachHangService.findById(id);
 		if (rs != null) {
-			khachHangService.update(khachHang);
-			return new ResponseEntity<KhachHang>(khachHang, HttpStatus.OK);
+			rs.setEmail(khachHang.getEmail());
+			rs.setLoai(khachHang.getLoai());
+			rs.setSdt(khachHang.getSdt());
+			rs.setTen(khachHang.getTen());
+			khachHangService.update(rs);
+			return new ResponseEntity<KhachHang>(rs, HttpStatus.OK);
 		}
 		return ResponseEntity.badRequest().body(new MessageResponse("Cập nhật khách hàng không thành công"));
 	}

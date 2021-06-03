@@ -55,7 +55,7 @@ public class NhaCungCapServiceImpl implements NhaCungCapService {
 	@Transactional
 	public void update(NhaCungCap nhaCungCap) {
 		Session session = SessionFactory.getCurrentSession();
-		session.saveOrUpdate(nhaCungCap);
+		session.update(nhaCungCap);
 	}
 
 	@Override
