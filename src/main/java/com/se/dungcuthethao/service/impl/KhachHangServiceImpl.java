@@ -21,7 +21,7 @@ public class KhachHangServiceImpl implements KhachHangService {
 
 	@Override
 	@Transactional
-	public List<KhachHang> findAdd() {
+	public List<KhachHang> findAll() {
 		Session session = SessionFactory.getCurrentSession();
 		List<KhachHang> list = session.createQuery("from KhachHang", KhachHang.class).getResultList();
 		return list;

@@ -41,7 +41,7 @@ public class KhachHangController {
 
 	@GetMapping("/khachhangs")
 	public ResponseEntity<?> findAll() {
-		return new ResponseEntity<List<KhachHang>>(khachHangService.findAdd(), HttpStatus.OK);
+		return new ResponseEntity<List<KhachHang>>(khachHangService.findAll(), HttpStatus.OK);
 	}
 
 	@GetMapping("/khachhangs/{id}")

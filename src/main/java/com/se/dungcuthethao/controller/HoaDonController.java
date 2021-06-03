@@ -78,6 +78,26 @@ public class HoaDonController {
 		TaiKhoan taiKhoan = taiKhoanService.findByUsername(username);
 		KhachHang khachHang = khachHangService.findByTaiKhoanId(taiKhoan.getId());
 		HoaDon hoaDon = new HoaDon(khachHang);
+		hoaDonService.save(hoaDon);
+		return new ResponseEntity<HoaDon>(hoaDon, HttpStatus.OK);
+	}
+	
+	/**
+	 * load customer cart
+	 * @param token
+	 * @return
+	 */
+	@PreAuthorize("hasRole('CUSTOMER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+	@GetMapping(value = "/hoadons/loadCart")
+	public ResponseEntity<?> loadCart(@RequestHeader("Authorization") String token) {
+		String username = jwtUtils.getUserNameFromJwtToken(token.substring(6));
+		TaiKhoan taiKhoan = taiKhoanService.findByUsername(username);
+		KhachHang khachHang = khachHangService.findByTaiKhoanId(taiKhoan.getId());
+		HoaDon hoaDon = hoaDonService.findCart(khachHang.getId());
+		if(hoaDon == null) {
+			createCart(token);
+			hoaDon = hoaDonService.findCart(khachHang.getId());
+		}
 		return new ResponseEntity<HoaDon>(hoaDon, HttpStatus.OK);
 	}
 	

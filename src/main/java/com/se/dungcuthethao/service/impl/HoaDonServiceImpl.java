@@ -80,4 +80,22 @@ public class HoaDonServiceImpl implements HoaDonService {
 		return list;
 	}
 
+	/**
+	 * tìm hóa đơn có mã khách hàng và trạng thái đơn là PENDING (customer cart)
+	 */
+	@Override
+	@Transactional
+	public HoaDon findCart(Long id) {
+		Session session = SessionFactory.getCurrentSession();
+		HoaDon hoaDon = null;
+		try {
+			TypedQuery<HoaDon> query = session
+					.createQuery("from HoaDon where khachHangID = :id and trangThai = 'PENDING'", HoaDon.class)
+					.setParameter("id", id);
+			hoaDon = query.getSingleResult();
+		} catch (Exception e) {
+		}
+		return hoaDon;
+	}
+
 }

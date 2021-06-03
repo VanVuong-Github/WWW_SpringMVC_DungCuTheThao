@@ -6,7 +6,7 @@ import com.se.dungcuthethao.entity.KhachHang;
 
 public interface KhachHangService {
 	
-	public List<KhachHang> findAdd();
+	public List<KhachHang> findAll();
 
 	public KhachHang findById(Long id);
 

@@ -8,6 +8,8 @@ public interface HoaDonService {
 	public List<HoaDon> findAdd();
 
 	public HoaDon findById(Long id);
+	
+	public HoaDon findCart(Long id);
 
 	public void save(HoaDon hoaDon);
 	
