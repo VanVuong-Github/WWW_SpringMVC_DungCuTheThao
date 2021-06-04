@@ -161,7 +161,6 @@ public class HoaDon implements Serializable {
 	@PrePersist
 	public void prePersist() {
 		ngayDatHang = LocalDate.now();
-		trangThaiEnum = TrangThaiEnum.PENDING;
 		sumTotal();
 	}
 

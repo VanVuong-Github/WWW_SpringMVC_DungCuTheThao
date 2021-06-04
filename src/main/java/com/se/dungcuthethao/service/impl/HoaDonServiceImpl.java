@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.se.dungcuthethao.entity.HoaDon;
+import com.se.dungcuthethao.entity.enumEntity.TrangThaiEnum;
 import com.se.dungcuthethao.service.HoaDonService;
 
 @Repository
@@ -18,7 +19,7 @@ public class HoaDonServiceImpl implements HoaDonService {
 	
 	@Autowired
 	private SessionFactory SessionFactory;
-
+	
 	@Override
 	@Transactional
 	public List<HoaDon> findAdd() {
@@ -39,6 +40,8 @@ public class HoaDonServiceImpl implements HoaDonService {
 	@Transactional
 	public void save(HoaDon hoaDon) {
 		Session session = SessionFactory.getCurrentSession();
+		hoaDon.setTrangThai(TrangThaiEnum.PROCESSING);
+		hoaDon.setTong(hoaDon.sumTotal());
 		session.save(hoaDon);
 	}
 

@@ -1,7 +1,7 @@
 package com.se.dungcuthethao.controller;
 
 import java.time.LocalDate;
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,15 +23,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.se.dungcuthethao.entity.ChiTietHoaDon;
 import com.se.dungcuthethao.entity.HoaDon;
 import com.se.dungcuthethao.entity.KhachHang;
-import com.se.dungcuthethao.entity.SanPham;
 import com.se.dungcuthethao.entity.TaiKhoan;
-import com.se.dungcuthethao.entity.enumEntity.TrangThaiEnum;
 import com.se.dungcuthethao.exception.CustomException;
 import com.se.dungcuthethao.jwt.JwtUtils;
 import com.se.dungcuthethao.jwt.response.MessageResponse;
+import com.se.dungcuthethao.model.ChiTietHoaDonModel;
+import com.se.dungcuthethao.model.HoaDonCreateModel;
 import com.se.dungcuthethao.service.HoaDonService;
 import com.se.dungcuthethao.service.KhachHangService;
-import com.se.dungcuthethao.service.SanPhamService;
 import com.se.dungcuthethao.service.TaiKhoanService;
 
 /**
@@ -45,8 +44,6 @@ import com.se.dungcuthethao.service.TaiKhoanService;
 @RequestMapping("/api")
 public class HoaDonController {
 
-	@Autowired
-	private SanPhamService sanPhamService;
 
 	@Autowired
 	private HoaDonService hoaDonService;
@@ -117,27 +114,28 @@ public class HoaDonController {
 		return new ResponseEntity<HoaDon>(hoaDon, HttpStatus.OK);
 	}
 
+	@PreAuthorize("hasRole('CUSTOMER') or hasRole('MODERATOR') or hasRole('ADMIN')")
 	@PostMapping(value = "/hoadons", produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
-	public ResponseEntity<?> add(@RequestBody HoaDon hoaDon) throws CustomException {
-		HoaDon newHoaDon = new HoaDon(hoaDon.getKhachHang());
+	public ResponseEntity<?> add(@RequestHeader("Authorization") String token, @RequestBody HoaDonCreateModel hoaDon)
+			throws CustomException {
+		String username = jwtUtils.getUserNameFromJwtToken(token.substring(6));
+		TaiKhoan taiKhoan = taiKhoanService.findByUsername(username);
+		KhachHang khachHang = khachHangService.findByTaiKhoanId(taiKhoan.getId());
+		HoaDon newHoaDon = new HoaDon(khachHang);
 		newHoaDon.setDiaChiGiaoHang(hoaDon.getDiaChiGiaoHang());
 		newHoaDon.setNgayDatHang(LocalDate.now());
 		newHoaDon.setThanhToan(hoaDon.getThanhToan());
-		newHoaDon.setTrangThai(TrangThaiEnum.PROCESSING);
-		newHoaDon.setTong(hoaDon.sumTotal());
-		List<ChiTietHoaDon> orderDetails = hoaDon.getChiTietHoaDons();
-		for (Iterator<?> iterator = orderDetails.iterator(); iterator.hasNext();) {
-			ChiTietHoaDon detail = (ChiTietHoaDon) iterator.next();
-			SanPham sanPham = sanPhamService.findById(detail.getSanPham().getId());
-			if (sanPham != null) {
-				detail.setSanPham(sanPham);
-				detail.setHoaDon(newHoaDon);
-				if (detail.getSoLuong() > sanPham.getSoLuong())
-					throw new CustomException("Sản phẩm " + sanPham.getTen() + " không còn đủ số lượng");
-			} else
-				throw new CustomException("Không tìm thấy sản phẩm có Id= " + detail.getSanPham().getId());
+		List<ChiTietHoaDon> list = new ArrayList<ChiTietHoaDon>();
+		List<ChiTietHoaDonModel> chiTietHoaDons = hoaDon.getChiTietHoaDons();
+		for (ChiTietHoaDonModel chiTietHoaDonModel : chiTietHoaDons) {
+			ChiTietHoaDon chiTietHoaDon = new ChiTietHoaDon();
+			chiTietHoaDon.setDonGia(chiTietHoaDonModel.getDonGia());
+			chiTietHoaDon.setSoLuong(chiTietHoaDonModel.getSoLuong());
+			chiTietHoaDon.setSanPham(chiTietHoaDonModel.getSanPham());
+			chiTietHoaDon.setHoaDon(newHoaDon);
+			list.add(chiTietHoaDon);
 		}
-		newHoaDon.setChiTietHoaDons(orderDetails);
+		newHoaDon.setChiTietHoaDons(list);
 		hoaDonService.save(newHoaDon);
 		return new ResponseEntity<HoaDon>(newHoaDon, HttpStatus.OK);
 	}
@@ -147,10 +145,12 @@ public class HoaDonController {
 	public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestBody HoaDon hoaDon) throws CustomException {
 		HoaDon rs = hoaDonService.findById(id);
 		if (rs != null) {
-			hoaDon.setId(id);
-			hoaDon.setTong(hoaDon.sumTotal());
-			hoaDonService.update(hoaDon);
-			return new ResponseEntity<HoaDon>(hoaDon, HttpStatus.OK);
+			rs.setDiaChiGiaoHang(hoaDon.getDiaChiGiaoHang());
+			rs.setThanhToan(hoaDon.getThanhToan());
+			rs.setTrangThai(hoaDon.getTrangThai());
+			rs.setTong(rs.sumTotal());
+			hoaDonService.update(rs);
+			return new ResponseEntity<HoaDon>(rs, HttpStatus.OK);
 		}
 		return ResponseEntity.badRequest().body(new MessageResponse("Cập nhật hóa đơn không thành công"));
 	}

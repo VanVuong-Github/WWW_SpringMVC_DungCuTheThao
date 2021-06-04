@@ -1,7 +1,8 @@
 package com.se.dungcuthethao.mail;
 
 import java.time.LocalDate;
-import java.util.Iterator;
+
+import javax.transaction.Transactional;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -82,32 +83,31 @@ public class MailAspect {
 				+ "            </div>\r\n"
 				+ "        </div>");
 		// load danh sách chi tiết hóa đơn
-		int i = 1;
-		for (Iterator<ChiTietHoaDon> iterator = hoaDon.getChiTietHoaDons().iterator(); iterator.hasNext();) {
-			ChiTietHoaDon chiTietHoaDon = iterator.next();
-			String item = "<div class=\"shipmentIndex\">\r\n"
-					+ "            <p><b>KIỆN HÀNG #"+i+"</b></p>\r\n"
-					+ "        </div>\r\n"
-					+ "\r\n"
-					+ "        <div class=\"orderdetails_info\">\r\n"
-					+ "            <div class=\"orderdetails_image\">\r\n"
-					+ "                <img src=\""+chiTietHoaDon.getSanPham().getImages()+"\" width=\"240\" height=\"300\" />\r\n"
-					+ "            </div>\r\n"
-					+ "            <div class=\"orderdetails_name\">\r\n"
-					+ "                "+chiTietHoaDon.getSanPham().getTen()+"\r\n"
-					+ "            </div>\r\n"
-					+ "            <div class=\"orderdetails_price\">\r\n"
-					+ "                VND "+chiTietHoaDon.tongHoaDon()+"\r\n"
-					+ "            </div>\r\n"
-					+ "            <div class=\"orderdetails_quantity\">\r\n"
-					+ "                Số lượng: "+chiTietHoaDon.getSoLuong()+"\r\n"
-					+ "            </div>\r\n"
-					+ "        </div>";
-			mailContent.append(item);
-			i++;
-		}
+//		int i = 1;
+//		for (ChiTietHoaDon chiTietHoaDon : hoaDon.getChiTietHoaDons()) {
+//			String item = "<div class=\"shipmentIndex\">\r\n"
+//					+ "            <p><b>KIỆN HÀNG #"+i+"</b></p>\r\n"
+//					+ "        </div>\r\n"
+//					+ "\r\n"
+//					+ "        <div class=\"orderdetails_info\">\r\n"
+//					+ "            <div class=\"orderdetails_image\">\r\n"
+//					+ "                <img src=\""+chiTietHoaDon.getSanPham().getImages()+"\" width=\"240\" height=\"300\" />\r\n"
+//					+ "            </div>\r\n"
+//					+ "            <div class=\"orderdetails_name\">\r\n"
+//					+ "                "+chiTietHoaDon.getSanPham().getTen()+"\r\n"
+//					+ "            </div>\r\n"
+//					+ "            <div class=\"orderdetails_price\">\r\n"
+//					+ "                VND "+chiTietHoaDon.tongHoaDon()+"\r\n"
+//					+ "            </div>\r\n"
+//					+ "            <div class=\"orderdetails_quantity\">\r\n"
+//					+ "                Số lượng: "+chiTietHoaDon.getSoLuong()+"\r\n"
+//					+ "            </div>\r\n"
+//					+ "        </div>";
+//			mailContent.append(item);
+//			i++;
+//		}
 		// mail footer
-		double thanhTien = hoaDon.getTong() + ship;
+		float thanhTien = hoaDon.getTong() + ship;
 		mailContent.append("<div class=\"mail_footer\">\r\n"
 				+ "        <div>\r\n"
 				+ "            <div>\r\n"
